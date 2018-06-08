@@ -1,0 +1,87 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+
+        <title>Sistema Lab Dielectrico</title>
+        
+    </h:head>
+    
+    <h:body>
+        <p:layout fullPage="true" id="layoutFull" >
+            
+            <p:layoutUnit position="north" > 
+                <h:form>     
+                    
+                    <p:growl id="messages" showDetail="false"/>
+                    
+                    <p:toolbar>
+                        <f:facet name="left"  >
+                            
+                        </f:facet>
+                        <f:facet name="right">
+                            <p:menuButton value="Options">
+                                <p:menuitem value="Save" actionListener="#{toolbarView.save}" update="messages" icon="ui-icon-disk" />
+                                <p:menuitem value="Update" actionListener="#{toolbarView.update}" update="messages" icon="ui-icon-arrowrefresh-1-w" />
+                                <p:menuitem value="Delete" actionListener="#{toolbarView.delete}" ajax="false" icon="ui-icon-close" />
+                                <p:menuitem value="Homepage" url="http://www.primefaces.org" icon="ui-icon-extlink" />
+                            </p:menuButton>
+                        </f:facet>
+                    </p:toolbar>
+                </h:form>
+            </p:layoutUnit>
+            
+            <p:layoutUnit position="west" size="245" header="Menú" resizable="true" closable="true" collapsible="true">
+                
+            <h:form id="formMenu" >  
+
+            <p:growl id="messages" showDetail="true"/>
+
+                <!-- Menu del Sistema -->
+                <p:menu style="width:240px">
+
+                        <p:menuitem value="Ensayos Dialectricos" ajax="false" actionListener="#{menuView.ensayos}" update="messages,:formCenter:panelGroupCenter" icon="ui-icon-star" />
+
+                        <p:menuitem value="EPPs" actionListener="#{menuView.dos}" update="messages" icon="ui-icon-star" />
+
+                        <p:menuitem value="Patrones" actionListener="#{menuView.tres}" update="messages" icon="ui-icon-star" />
+
+                        <p:menuitem value="Tipo de Ensayos" actionListener="#{menuView.cuatro}" update="messages" icon="ui-icon-star" />
+
+                        <p:menuitem value="Motivo de devolución" actionListener="#{menuView.cinco}" update="messages" icon="ui-icon-star" />
+
+                        <p:menuitem value="Clientes Externos" actionListener="#{menuView.seis}" update="messages" icon="ui-icon-star" />
+
+                        <p:menuitem value="Estados EPPs" actionListener="#{menuView.siete}" update="messages" icon="ui-icon-star" />
+
+                        <p:menuitem value="Tipo de EPPs" actionListener="#{menuView.ocho}" update="messages" icon="ui-icon-star" />
+
+                        <p:menuitem value="Recepción y Despachó EPPs" actionListener="#{menuView.nueve}" update="messages" icon="ui-icon-star" />
+
+                        <p:menuitem value="Modulo de Existencias" actionListener="#{menuView.dies}" update="messages" icon="ui-icon-star" />
+
+                </p:menu>
+
+            </h:form>
+                
+            </p:layoutUnit>
+            
+            <p:layoutUnit position="center" id="layoutCenter" header="Welcome : user name" >
+                
+                <!--Contenido se actualza-->
+                <h:form id="formCenter" style="text-align: center" >
+                    <h:panelGroup id="panelGroupCenter">
+                        
+                        <ui:insert name="content">Content</ui:insert>
+                        
+                    </h:panelGroup>
+                </h:form>
+                
+            </p:layoutUnit>
+        </p:layout>
+    </h:body>     
+</html>

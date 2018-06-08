@@ -1,0 +1,257 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">  
+    <h:head>
+        <title>Tipo Ensayos</title>
+    </h:head>
+
+    <style>
+
+        .stylePerColumn {
+            background-color: #F22626;
+            color: black;
+            border-style: none !important;
+        }
+
+    </style>
+
+    <h:body>
+
+        <ui:composition template="../index.xhtml">
+            <ui:define name="content"> 
+
+         
+                    <h:form id="formTipoEnsayos" >
+                        <p:growl id="msg" showDetail="false" life="5000" />  
+
+                        <p:dataTable id="tbltipoepp" var="tepp"  value="#{tipoEppBean.listas}"  selectionMode="single"  widgetVar="tipoeppTable" rowKey="#{tepp.id_tipo_epp}"
+                                     rows="10"
+                                     reflow="true"
+                                     currentPageReportTemplate="Resultados :{totalRecords}"
+                                     
+                                     paginator="true"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"
+                                     rowsPerPageTemplate="5,10,15" >
+
+                            <f:facet name="header">
+                                <p:outputPanel>
+
+                                    <div class="ui-g" style="height:100% " >
+                                        <div class="ui-g-12 ui-g-nopad">
+                                            
+                                            <div class="ui-g-4"> 
+                                                
+                                                <p:inputText id="globalFilter" style="width:150px"   immediate="true"/> 
+                                                
+                                                <p:commandButton icon="ui-icon-search" title="Buscar" onclick="PF('tipoeppTable').filter()" ajax="true" />
+                                                
+                                                <p:commandButton  ajax="true" title="Recargar" icon="ui-icon-refresh" oncomplete="PF('tipoeppTable').clearFilters()" resetValues="true"/>
+                                                 
+                                            </div>
+                                            
+                                            <div class="ui-g-4">
+                                                <h:outputText value="Listado de Tipos de Epp" />
+                                            </div>
+                                            
+                                            <div class="ui-g-4">
+                                                <p:commandButton  update=":formAgregar" actionListener="#{tipoEppBean.limpiarformulario()}"
+                                                      value="Agregar Id Tipo Ensayo" oncomplete="PF('agregar').show()" icon="ui-icon-plus" title="Editar" />
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
+
+                                </p:outputPanel>
+                            </f:facet>
+
+
+                            <p:column headerText="Id Tipo Epp"  filterStyle="display:none" filterBy="#{tepp.id_tipo_epp}" sortBy="#{tepp.id_tipo_epp}"  >
+                                <h:outputText value="#{tepp.id_tipo_epp}" />
+                            </p:column>
+
+                            <p:column headerText="Descripción Corta"  filterStyle="display:none" filterBy="#{tepp.descripcion_corta}" sortBy="#{tepp.descripcion_corta}" >
+                                <h:outputText value="#{tepp.descripcion_corta}" />
+                            </p:column>
+                            
+                            <p:column headerText="Descripción Completa"  filterStyle="display:none" filterBy="#{tepp.descripcion_completa}" sortBy="#{tepp.descripcion_completa}" >
+                                <h:outputText value="#{tepp.descripcion_completa}" />
+                            </p:column>
+                            
+                            <p:column headerText="Marca"  filterStyle="display:none" filterBy="#{tepp.marca}" sortBy="#{tepp.marca}" >
+                                <h:outputText value="#{tepp.marca}" />
+                            </p:column>
+                            
+                            <p:column headerText="Largo Tipo"  filterStyle="display:none" filterBy="#{tepp.largo_tipo}" sortBy="#{tepp.largo_tipo}" >
+                                <h:outputText value="#{tepp.largo_tipo}" />
+                            </p:column>
+                            
+                            <p:column headerText="Clase Tensión Ensayo"  filterStyle="display:none" filterBy="#{tepp.claseTensionEnsayo}" sortBy="#{tepp.claseTensionEnsayo}" >
+                                <h:outputText value="#{tepp.claseTensionEnsayo}" />
+                            </p:column>
+                            
+                            <p:column headerText="Clase Tensión"  filterStyle="display:none" filterBy="#{tepp.claseTensionClases}" sortBy="#{tepp.claseTensionClases}" >
+                                <h:outputText value="#{tepp.claseTensionEnsayo}" />
+                            </p:column>
+                                      
+
+                            <p:column style="width: 80px" exportable="false" >
+
+                                <p:commandButton  update=":formEditar" oncomplete="PF('editar').show()" icon="ui-icon-pencil" title="Editar">
+                                    <f:setPropertyActionListener value="#{tepp}" target="#{tipoEppBean.tipoepp}"  />
+                                </p:commandButton>
+
+                                <p:commandButton   update=":formEliminar" oncomplete="PF('eliminar').show()" icon="ui-icon-trash" title="Eliminar">  
+                                    <f:setPropertyActionListener value="#{tepp}" target="#{tipoEppBean.tipoepp}" />  
+                                </p:commandButton>  
+
+                            </p:column>
+
+
+                            <f:facet name="paginatorTopRight">
+                                
+                            </f:facet>
+
+                            <f:facet name="paginatorBottomRight">
+                                
+                                <h:commandLink>
+                                    <p:graphicImage name="/imagenes/excel.png" width="24"/>
+                                    <p:dataExporter type="xls" target="tbltipoepp" fileName="EstadosEpps" postProcessor="#{tipoEppBean.postProcessXLS}" />
+                                </h:commandLink>
+                                
+                            </f:facet>
+                            
+                        </p:dataTable>
+                        
+                        
+                        <p:blockUI block="tbltipoepp" trigger="tbltipoepp">
+                                    <p:graphicImage name="/imagenes/fanreel-loader2.gif"/>
+                            </p:blockUI> 
+                        
+
+                    </h:form>
+
+                             
+                
+
+                <!--formulario de agregar -->
+                <h:form id="formAgregar">  
+                    <p:dialog header="Agregar Nuevo Tipo Epp" widgetVar="agregar" resizable="false" showEffect="fade" hideEffect="fade" modal="true">
+
+                        <p:messages id="messages" showDetail="false" autoUpdate="false"  closable="true" />
+
+                        <h:panelGrid columns="2" cellpadding="5" >
+                          <h:outputText value="Clase "/>
+                    <p:selectOneMenu value="#{tipoEppBean.tipoepp.clase}" filter="true" filterMatchMode="contains" required="true" requiredMessage="El campo Clase es obligatorio">  
+                        <f:selectItem  itemLabel="Seleccionar Clase" itemValue= "" />  
+                        <f:selectItems value="#{rqclaseTensionBean.selectOneItemClasesTension}" /> 
+                    </p:selectOneMenu>  
+                                                   
+                            <h:outputLabel value="Descripción Corta :" style="font-weight:bold" />
+                            <p:inputText id="input_descripcion" value="#{tipoEppBean.tipoepp.descripcion_corta}" maxlength="45" size="50" required="true" requiredMessage="El campo descripcion corta es obligatorio" />
+                            
+                            <h:outputLabel value="Descripción Completa :" style="font-weight:bold" />
+                            <p:inputText id="input_descripcion2" value="#{tipoEppBean.tipoepp.descripcion_completa}" maxlength="45" size="50" required="true" requiredMessage="El campo negocio es obligatorio" />
+                            
+                           <h:outputLabel value="Marca :" style="font-weight:bold" />
+                           <p:inputText id="input_marca" value="#{tipoEppBean.tipoepp.marca}" maxlength="45" size="50" required="true" requiredMessage="El campo marca es obligatorio" />
+                            
+                            
+                             <h:outputLabel value="Largo Tipo :" style="font-weight:bold" />
+                             <p:inputText id="input_largo" value="#{tipoEppBean.tipoepp.largo_tipo}" maxlength="45" size="50" required="true" requiredMessage="El campo Largo Tipo es obligatorio" />
+                                 
+                             
+                            <p:commandButton  ajax="true" value="Guardar" icon="ui-icon-disk" update=":formTipoEnsayos"  oncomplete="PF('agregar').hide();PF('tipoeppTable').clearFilters()" action="#{tipoEppBean.btnCreate(actionEvent)}" />
+
+                            <p:commandButton id="decline" value="Cancelar" icon="ui-icon-circle-close" oncomplete="PF('agregar').hide()"  />
+
+                        </h:panelGrid>  
+
+                    </p:dialog>
+                </h:form>
+
+
+
+                <!--formulario de actualizar -->
+                <h:form id="formEditar">  
+                    <p:dialog header="Modificar Tipo Ensayo" widgetVar="editar" resizable="false" showEffect="fade" hideEffect="fade" modal="true">
+
+                        <p:messages id="messages" showDetail="false" autoUpdate="false"  closable="true" />
+
+                        <h:inputHidden value="#{tipoEppBean.tipoepp.id_tipo_epp}"/>
+
+                        <h:panelGrid columns="2" cellpadding="5" >
+                        <h:outputText value="Clase "/>
+                      <p:selectOneMenu value="#{tipoEppBean.tipoepp.clase}" filter="true" filterMatchMode="contains" required="true" requiredMessage="El campo Clase es obligatorio">  
+                        <f:selectItem  itemLabel="Seleccionar Clase" itemValue= "" />  
+                        <f:selectItems value="#{rqclaseTensionBean.selectOneItemClasesTension}" /> 
+                    </p:selectOneMenu> 
+                            
+                          <h:outputLabel value="Descripción Corta :" style="font-weight:bold" />
+                            <p:inputText id="input_descripcion" value="#{tipoEppBean.tipoepp.descripcion_corta}" maxlength="45" size="50" required="true" requiredMessage="El campo descripcion corta es obligatorio" />
+                            
+                            <h:outputLabel value="Descripción Completa :" style="font-weight:bold" />
+                            <p:inputText id="input_descripcion2" value="#{tipoEppBean.tipoepp.descripcion_completa}" maxlength="45" size="50" required="true" requiredMessage="El campo negocio es obligatorio" />
+                            
+                           <h:outputLabel value="Marca :" style="font-weight:bold" />
+                           <p:inputText id="input_marca" value="#{tipoEppBean.tipoepp.marca}" maxlength="45" size="50" required="true" requiredMessage="El campo marca es obligatorio" />
+                            
+                            
+                             <h:outputLabel value="Largo Tipo :" style="font-weight:bold" />
+                             <p:inputText id="input_largo" value="#{tipoEppBean.tipoepp.largo_tipo}" maxlength="45" size="50" required="true" requiredMessage="El campo Largo Tipo es obligatorio" />    
+                            
+
+                            <p:commandButton  ajax="true" value="Actualizar" icon="ui-icon-disk" update=":formTipoEnsayos"  oncomplete="PF('editar').hide();PF('tipoeppTable').clearFilters()" action="#{tipoEppBean.btnUpdate(actionEvent)}" />
+
+                            <p:commandButton id="decline" value="Cancelar" icon="ui-icon-circle-close" oncomplete="PF('editar').hide()"  />
+
+                        </h:panelGrid>  
+
+                    </p:dialog>
+                </h:form>
+
+
+
+                <!--formulario de eliminar -->
+                <h:form id="formEliminar">  
+                    <p:dialog header="Eliminar Id Tipo Ensayo" widgetVar="eliminar" resizable="false" showEffect="fade" hideEffect="fade" modal="true">
+
+                        <p:messages id="messages" showDetail="false" autoUpdate="false"  closable="true" />
+
+                        <h:inputHidden value="#{tipoEppBean.tipoepp.id_tipo_epp}"/>
+
+                        <h:panelGrid columns="2" cellpadding="15" >
+
+                              <h:outputLabel value="Descripción Corta :" style="font-weight:bold" />
+                              <p:outputLabel id="input_descripcion" value="#{tipoEppBean.tipoepp.descripcion_corta}"  />
+                            
+                            <h:outputLabel value="Descripción Completa :" style="font-weight:bold" />
+                            <p:outputLabel id="input_descripcion2" value="#{tipoEppBean.tipoepp.descripcion_completa}" />
+                            
+                           <h:outputLabel value="Marca :" style="font-weight:bold" />
+                           <p:outputLabel id="input_marca" value="#{tipoEppBean.tipoepp.marca}"  />
+                            
+                            
+                             <h:outputLabel value="Largo Tipo :" style="font-weight:bold" />
+                             <p:outputLabel id="input_largo" value="#{tipoEppBean.tipoepp.largo_tipo}"  />
+                            
+
+                            <p:commandButton  ajax="true" value="Eliminar" icon="ui-icon-disk" update=":formTipoEnsayos"  oncomplete="PF('eliminar').hide();PF('tipoeppTable').clearFilters()" action="#{tipoEppBean.btnDelete(actionEvent)}" />
+
+                            <p:commandButton id="decline" value="Cancelar" icon="ui-icon-circle-close" oncomplete="PF('eliminar').hide()"  />
+
+                        </h:panelGrid>  
+
+                    </p:dialog>
+                </h:form>
+
+                
+            </ui:define>
+        </ui:composition>
+
+
+    </h:body>
+</html>

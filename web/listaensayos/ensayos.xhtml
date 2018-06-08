@@ -1,0 +1,179 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">  
+    <h:head>
+        <title>Tipo Ensayos</title>
+    </h:head>
+
+    <style>
+
+        .stylePerColumn {
+            background-color: #F22626;
+            color: black;
+            border-style: none !important;
+        }
+
+    </style>
+
+    <h:body>
+
+        <ui:composition template="../index.xhtml">
+            <ui:define name="content"> 
+
+         
+                    <h:form id="formEnsayos" >
+                        <p:growl id="msg" showDetail="false" life="5000" />  
+
+                        <p:dataTable id="tblensayos" var="ensayos"  value="#{ensayosBean.listas}"  selectionMode="single"  widgetVar="ensayosTable" rowKey="#{ensayos.id_ensayo}" 
+                                     rows="10"
+                                     reflow="true"
+                                     currentPageReportTemplate="Resultados :{totalRecords}"
+                                     
+                                     paginator="true"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"
+                                     rowsPerPageTemplate="5,10,15" >
+
+                            <f:facet name="header">
+                                <p:outputPanel>
+
+                                    <div class="ui-g" style="height:100% " >
+                                        <div class="ui-g-12 ui-g-nopad">
+                                            
+                                            <div class="ui-g-4"> 
+                                                
+                                                <p:inputText id="globalFilter" style="width:150px"   immediate="true"/> 
+                                                
+                                                <p:commandButton icon="ui-icon-search" title="Buscar" onclick="PF('ensayosTable').filter()" ajax="true" />
+                                                
+                                                <p:commandButton  ajax="true" title="Recargar" icon="ui-icon-refresh" oncomplete="PF('ensayosTable').clearFilters()" resetValues="true"/>
+                                                 
+                                            </div>
+                                            
+                                            <div class="ui-g-4">
+                                                <h:outputText value="Listado de Tipos de Ensayos" />
+                                            </div>
+                                            
+                                            
+                                        </div>
+                                    </div>
+
+                                </p:outputPanel>
+                            </f:facet>
+
+
+                            <p:column headerText="Correlativo"  filterStyle="display:none" filterBy="#{ensayos}" sortBy="#{ensayos.id_ensayo}"  >
+                                <h:outputText value="#{ensayos.correlativo}" />
+                            </p:column>
+
+
+                            <p:column>
+                             <f:facet name="header">
+                                 <h:outputText value="F. Ejecución"/>
+                             </f:facet>
+                                <h:outputText value="#{ensayos.fecha_ejecucion}" >
+                                 <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+                                  </h:outputText>
+                                </p:column> 
+                            
+                            <p:column>
+                             <f:facet name="header">
+                                 <h:outputText value="F. Emisión"/>
+                             </f:facet>
+                                <h:outputText value="#{ensayos.fecha_emision}" >
+                                 <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+                                  </h:outputText>
+                                </p:column>
+                            
+                               <p:column>
+                             <f:facet name="header">
+                                 <h:outputText value="F. Vencimiento"/>
+                             </f:facet>
+                                   <h:outputText value="#{ensayos.fecha_vencimiendo}" >
+                                 <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+                                  </h:outputText>
+                                </p:column>
+                            
+                            
+                             <p:column headerText="Patron Descripción"  filterStyle="display:none"   >
+                                 <h:outputText value="#{ensayos.patronDescripcion}" />
+                            </p:column>
+                            
+                             <p:column headerText="Tipo Ensayo"  filterStyle="display:none"   >
+                                 <h:outputText value="#{ensayos.tipoEnsayoDescripcion}" />
+                            </p:column>
+                            
+                             <p:column headerText="Tecnico Lab"  filterStyle="display:none"   >
+                                 <h:outputText value="#{ensayos.personaTecnicoLabNombre}" />
+                                 <h:outputText value="#{ensayos.personaTecnicoLabApellido}" />
+                            </p:column>
+                            
+                            <p:column headerText="Sucursal"  filterStyle="display:none" filterBy="#{ensayos.sucursalNombre}" sortBy="#{ensayos.sucursalNombre}" >
+                                <h:outputText value="#{ensayos.sucursalNombre}" />
+                            </p:column>
+                            
+                           
+
+                            <p:column style="width: 80px" exportable="false" >
+
+                                <p:commandButton  oncomplete="PF('editar').show()" icon="ui-icon-pencil" title="Editar">
+                                    <f:setPropertyActionListener value="#{ensayos}" target="#{ensayosBean.ensayo}"  />
+                                </p:commandButton>
+
+                                <p:commandButton   update=":formEliminar"  oncomplete="PF('eliminar').show()" icon="ui-icon-trash" title="Eliminar">  
+                                    <f:setPropertyActionListener value="#{ensayos}" target="#{ensayosBean.ensayo}" />  
+                                </p:commandButton>  
+
+                            </p:column>
+
+
+                            <f:facet name="paginatorTopRight">
+                                
+                            </f:facet>
+
+                            <f:facet name="paginatorBottomRight">
+                                
+                                <h:commandLink>
+                                    <p:graphicImage name="/imagenes/excel.png" width="24"/>
+                                    <p:dataExporter type="xls" target="tblensayos" fileName="EstadosEpps" postProcessor="#{ensayosBean.postProcessXLS}" />
+                                </h:commandLink>
+                                
+                            </f:facet>
+                            
+                        </p:dataTable>
+                        
+                        
+                        <p:blockUI block="tblensayos" trigger="tblensayos">
+                                    <p:graphicImage name="/imagenes/fanreel-loader2.gif"/>
+                            </p:blockUI> 
+                        
+
+                    </h:form>
+
+                                 <!--formulario de eliminar -->
+                <h:form id="formEliminar">  
+                    <p:dialog header="Eliminar Ensayo" widgetVar="eliminar" resizable="false" showEffect="fade" hideEffect="fade" modal="true">
+
+                        <p:messages id="messages" showDetail="false" autoUpdate="false"  closable="true" />
+
+                        <h:inputHidden value="#{ensayosBean.ensayo.id_ensayo}"/>
+
+                        <h:panelGrid columns="2" cellpadding="15" >
+                            <p:commandButton  ajax="true" value="Eliminar" icon="ui-icon-disk" update=":formEnsayos"  oncomplete="PF('eliminar').hide();PF('ensayosTable').clearFilters()" action="#{ensayosBean.btnDelete(actionEvent)}" />
+
+                            <p:commandButton id="decline" value="Cancelar" icon="ui-icon-circle-close" oncomplete="PF('eliminar').hide()"  />
+
+                        </h:panelGrid>             
+                    </p:dialog>
+                </h:form>
+
+                
+            </ui:define>
+        </ui:composition>
+
+
+    </h:body>
+</html>

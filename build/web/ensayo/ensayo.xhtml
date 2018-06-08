@@ -1,0 +1,114 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">  
+    <h:head>
+        <title>Tipo Ensayos</title>
+    </h:head>
+
+    <style>
+
+        .stylePerColumn {
+            background-color: #F22626;
+            color: black;
+            border-style: none !important;
+        }
+
+    </style>
+
+    <h:body>
+
+        <ui:composition template="../index.xhtml">
+                    <ui:define name="content">   
+                <p:panel id="panel" header="Nuevo Ensayo" style="margin-bottom:10px;">
+                     <!--formulario de Creacion ensayo -->
+                   <h:form id="formEnsayo"  >
+                     <p:messages id="messages" showDetail="false" autoUpdate="false"  closable="true"/>
+                     <h:panelGrid columns="4" cellspacing="10">
+                     <h:outputLabel value="N° Proyecto"  style="font-weight: bold" />
+                     <c:if test="#{ensayoBean.numeroensayocorrelativo == 0}">
+                         <p:inputText   value="#{ensayoBean.tipoensayo.correlativo}" />
+                     </c:if>
+
+                     <c:choose>
+                         <c:when test="#{ensayoBean.numeroensayocorrelativo !=0}">
+                             <p:inputText value="#{ensayoBean.numeroensayocorrelativo}" style="background-color: aliceblue"  readonly="true" size="5"  />
+                         </c:when>
+                     </c:choose>
+                     </h:panelGrid>
+                     
+                     <h:panelGrid columns="8" cellspacing="5">
+                     <h:outputLabel value="Fecha Emisión" />
+                     <p:calendar  pattern="dd/MM/yyyy" locale="es" value="#{ensayoBean.ensayo.fecha_emision}" size="12" required="true" >
+                    </p:calendar>
+
+                     <h:outputLabel value="N Fecha Solicitud" />
+                     <p:calendar  pattern="dd/MM/yyyy" locale="es" value="#{ensayoBean.ensayo.n_fecha_solicitud}" size="12" required="true" >
+                    </p:calendar>
+
+                     <h:outputLabel value="Fecha Ejecución" />
+                     <p:calendar  pattern="dd/MM/yyyy" locale="es" value="#{ensayoBean.ensayo.fecha_ejecucion}" size="12" required="true" >
+                    </p:calendar>
+         
+                     <h:outputLabel value="Fecha Vencimiento" />
+                     <p:calendar  pattern="dd/MM/yyyy" locale="es" value="#{ensayoBean.ensayo.fecha_vencimiendo}" size="12" required="true" >
+                    </p:calendar>
+                    
+                      </h:panelGrid>
+                     
+                     <h:panelGrid  columns="6">
+                     <p:panelGrid columns="2">
+                    <h:outputLabel value="Cantidad" />
+                    <p:inputText value="#{ensayoBean.ensayo.cantidad}"  size="50" required="true" requiredMessage="El campo Cantidad es obligatorio">
+                    </p:inputText>
+                    
+                    <h:outputLabel value="Tempratura" />
+                    <p:inputText value="#{ensayoBean.ensayo.temperatura_prom}"  size="50" required="true" requiredMessage="El campo Temperatura es obligatorio">
+                    </p:inputText>
+                    
+                    <h:outputLabel value="Humedad" />
+                    <p:inputText value="#{ensayoBean.ensayo.humedad_prom}"  size="50" required="true" requiredMessage="El campo Humedad Promedio es obligatorio">
+                    </p:inputText>
+                    
+                     </p:panelGrid>
+                         
+                         <h:outputText value="Patron "/>
+                    <h:panelGrid columns="2" cellspacing="10" >
+                        <p:selectOneMenu value="#{ensayoBean.ensayo.patron_id_patron}" filter="true" filterMatchMode="contains" required="true" requiredMessage="El campo Cliente es obligatorio">  
+                        <f:selectItem  itemLabel="Seleccionar Patron " itemValue= "" />  
+                        <f:selectItems value="#{ensayoBean.selectOneItemPatron}" /> 
+                    </p:selectOneMenu>  
+                    </h:panelGrid>
+                    
+                    <h:outputText value="Tipo Ensayo "/>
+                    <h:panelGrid columns="2" cellspacing="10" >
+                        <p:selectOneMenu value="#{ensayoBean.ensayo.tipo_ensayo_id_tipo_ensayo}" filter="true" filterMatchMode="contains" required="true" requiredMessage="El campo Cliente es obligatorio">  
+                        <f:selectItem  itemLabel="Seleccionar Tipo Ensayp " itemValue= "" />  
+                        <f:selectItems value="#{ensayoBean.selectOneItemTipoEnsayo}" /> 
+                    </p:selectOneMenu>  
+                    </h:panelGrid>
+                         
+                         
+                     </h:panelGrid>    
+                                        
+                    
+                    
+                    <br/><br/>
+                        <h:panelGrid columns="2" cellspacing="5">
+                            <p:commandButton id="btnGuardar" ajax="true" icon="save" update="formEnsayo" value="Guardar" action="#{ensayoBean.limpiarformulario()}" actionListener="#{ensayoBean.btnCreate(actionEvent)}"/>
+                            <p:commandButton id="btnLimpiar" value="Limpiar" icon="limpiar" immediate="true" ajax="true" update="formEnsayo" resetValues="true" />   
+                        </h:panelGrid>
+                    
+                   </h:form> 
+                </p:panel>
+            
+         </ui:define>
+        </ui:composition>
+
+
+    </h:body>
+</html>

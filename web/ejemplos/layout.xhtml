@@ -1,0 +1,130 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>Sistema Lab Dielectrico</title>
+    </h:head>
+    <h:body>
+        <p:layout fullPage="true">
+            <p:layoutUnit position="north" > 
+                <h:form>     
+                    <p:growl id="messages" showDetail="true" />
+                    <p:toolbar>
+                        <f:facet name="left"  >
+                            
+                        </f:facet>
+                        <f:facet name="right">
+                            <p:menuButton value="Options">
+                                <p:menuitem value="Save" actionListener="#{toolbarView.save}" update="messages" icon="ui-icon-disk" />
+                                <p:menuitem value="Update" actionListener="#{toolbarView.update}" update="messages" icon="ui-icon-arrowrefresh-1-w" />
+                                <p:menuitem value="Delete" actionListener="#{toolbarView.delete}" ajax="false" icon="ui-icon-close" />
+                                <p:menuitem value="Homepage" url="http://www.primefaces.org" icon="ui-icon-extlink" />
+                            </p:menuButton>
+                        </f:facet>
+                    </p:toolbar>
+                </h:form>
+            </p:layoutUnit>
+            <p:layoutUnit position="west" size="200" header="Menú" resizable="true" closable="true" collapsible="true">
+                <h:form>  
+                    <p:growl id="messages" showDetail="false"/>
+                    <p:menu style="width:180px">
+                        <p:menuitem value="Save" actionListener="#{menuView.save}" update=":formCenter:panelGroupCenter" icon="ui-icon-disk" /> 
+                        <p:menuitem value="Update" actionListener="#{menuView.update}" update=":formCenter:panelGroupCenter" icon="ui-icon-arrowrefresh-1-w"/>
+                        <p:menuitem value="Delete" actionListener="#{menuView.delete}" update=":formCenter:panelGroupCenter" icon="ui-icon-close"/>
+                        <p:menuitem value="Save" actionListener="#{menuView.delete}" update=":formCenter:panelGroupCenter" icon="ui-icon-home"/>
+                        <p:menuitem value="Save" actionListener="#{menuView.delete}" update=":formCenter:panelGroupCenter" icon="ui-icon-star"/>
+                    </p:menu>
+                </h:form>
+            </p:layoutUnit>
+            <p:layoutUnit position="center"  header="Welcome : user name"  >
+                <h:form id="formCenter" style="text-align: center" >
+                    <h:panelGroup id="panelGroupCenter">
+                        <ui:include src="#{menuView.openPage}" />
+                    </h:panelGroup>
+                </h:form>
+            </p:layoutUnit>
+        </p:layout>
+    </h:body>     
+</html>
+
+
+    <h:form id="formEnsayos" >
+        <p:dataTable var="car" value="#{dtFilterView.cars}" widgetVar="carsTable"
+                     emptyMessage="No cars found with given criteria" filteredValue="#{dtFilterView.filteredCars}">
+
+            <f:facet name="header">
+                <p:outputPanel>
+                    <h:outputText value="Search all fields:" />
+                    <p:inputText id="globalFilter" onkeyup="PF('carsTable').filter()" style="width:150px" placeholder="Enter keyword"/>
+                </p:outputPanel>
+            </f:facet>
+
+            <p:column filterBy="#{car.id}" headerText="Id" footerText="contains" filterMatchMode="contains">
+                <h:outputText value="#{car.id}" />
+            </p:column>
+
+            <p:column filterBy="#{car.year}" headerText="Year" footerText="lte" filterMatchMode="lte">
+                <f:facet name="filter">
+                    <p:spinner onchange="PF('carsTable').filter()" styleClass="year-spinner">
+                        <f:converter converterId="javax.faces.Integer" />
+                    </p:spinner>
+                </f:facet>
+                <h:outputText value="#{car.year}" />
+            </p:column>
+
+            <p:column filterBy="#{car.brand}" headerText="Brand" footerText="exact" filterMatchMode="exact">
+                <f:facet name="filter">
+                    <p:selectOneMenu onchange="PF('carsTable').filter()" >
+                        <f:selectItem itemLabel="Select One" itemValue="#{null}" noSelectionOption="true" />
+                        <f:selectItems value="#{dtFilterView.brands}" />
+                    </p:selectOneMenu>
+                </f:facet>
+                <h:outputText value="#{car.brand}" />
+            </p:column>
+
+            <p:column filterBy="#{car.color}" headerText="Color" footerText="in" filterMatchMode="in">
+                <f:facet name="filter">
+                    <p:selectCheckboxMenu label="Colors" onchange="PF('carsTable').filter()" panelStyle="width:125px" scrollHeight="150">
+                        <f:selectItems value="#{dtFilterView.colors}" />
+                    </p:selectCheckboxMenu>
+                </f:facet>
+                <h:outputText value="#{car.color}" />
+            </p:column>
+
+            <p:column filterBy="#{car.sold}" headerText="Status" footerText="equals" filterMatchMode="equals">
+                <f:facet name="filter">
+                    <p:selectOneButton onchange="PF('carsTable').filter()">
+                        <f:converter converterId="javax.faces.Boolean" />
+                        <f:selectItem itemLabel="All" itemValue="" />
+                        <f:selectItem itemLabel="Sold" itemValue="true" />
+                        <f:selectItem itemLabel="Sale" itemValue="false" />
+                    </p:selectOneButton>
+                </f:facet>
+                <h:outputText value="#{car.sold ? 'Sold': 'Sale'}" />
+            </p:column>
+
+            <p:column filterBy="#{car.price}" headerText="Price" footerText="custom (min)" filterFunction="#{dtFilterView.filterByPrice}">
+                <h:outputText value="#{car.price}">
+                    <f:convertNumber currencySymbol="$" type="currency"/>
+                </h:outputText>
+            </p:column>
+        </p:dataTable>
+    </h:form>
+
+
+
+
+                <!--Contenido se actualza-->
+                <h:form id="formCenter" style="text-align: center" >
+                    <h:panelGroup id="panelGroupCenter">
+                        
+                        <ui:include src="#{menuView.openPage}" />
+                        
+                    </h:panelGroup>
+                </h:form>
+                
+                

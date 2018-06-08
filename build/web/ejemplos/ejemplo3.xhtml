@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>TODO supply a title</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </head>
+    <body>
+        <div>TODO write content</div>
+        
+        <p:dataTable id="datatablepartidacopia" var="partidaseleccionadacopia"  paginator="true" widgetVar="partidacopia"  value="#{presupuestoBean.partidasproyectoCopia}" rowIndexVar="rowIndex"  rows="10"  selection="#{presupuestoBean.selectedPartidaCopia}" rowKey="#{partidaseleccionadacopia.nroPartida}" style="width:100%;font-size:x-small;text-align: center;"                                         
+                                         currentPageReportTemplate="Resultados :{totalRecords}" paginatorPosition="top" 
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} 
+                                     {LastPageLink} {Exporters}"
+                                         emptyMessage="No se encontaron partidas"  selectionMode="single">   
+                                <p:ajax event="rowSelect" oncomplete="PF('recursocopia').filter()" />  
+                                <f:facet name="header">
+                                    <p:outputLabel value="Busqueda por Partida o Proyecto"/>
+                                    <p:outputPanel>
+                                        <p:inputText id="globalFilter" style="width:150px"   immediate="true"/> <p:commandButton id="btnBuscar" value="BUSCAR" onclick="PF('partidacopia').filter()" ajax="true"/> <p:commandButton value="QUITAR FILTRO" ajax="true"  oncomplete="PF('partidacopia').clearFilters();" resetValues="true"/>
+                                    </p:outputPanel>     
+                                </f:facet> 
+                                <f:facet name="{Exporters}">
+                                    <div style="float:left">
+                                        <h:commandLink title="Exportar Tabla a Excel">
+                                         <f:param name="i" value="2" /> 
+                                        <p:graphicImage name="/img/excel_1.png" width="20"/>
+                                        <p:dataExporter type="xls" target="datatablepartidacopia" fileName="Listado de Todas Las Partidas" />
+                                    </h:commandLink>
+                                    </div>
+                                    </f:facet>  
+                                <p:column headerText="N°" width="25" exportable="false">
+                            #{rowIndex+1}
+                            </p:column>
+                                <p:column width="40" filterBy="#{partidaseleccionadacopia.numeroProyecto}"  filterStyle="width:80%" filterMatchMode="exact">
+                                    <f:facet name="header">
+                                        <h:outputText value="N°P"/>
+                                    </f:facet>
+                                    <h:outputLabel value="#{partidaseleccionadacopia.numeroProyecto}"/>
+                                </p:column>
+                                <p:column width="25" filterBy="#{partidaseleccionadacopia.letraProyecto}"  filterStyle="width:90%" filterMatchMode="exact">
+                                    <f:facet name="header">
+                                        <h:outputText value="L.P"/>
+                                    </f:facet>
+                                    <h:outputLabel value="#{partidaseleccionadacopia.letraProyecto}"/>
+                                </p:column>
+                                <p:column width="250" filterBy="#{partidaseleccionadacopia.descripcionPartida}" filterMatchMode="contains" filterStyle="display:none"   >
+                                    <f:facet name="header">
+                                        <h:outputText value="Partida"/>
+                                    </f:facet>
+                                    <h:outputText value="#{partidaseleccionadacopia.descripcionPartida}"/>
+                                </p:column>
+                                
+                                <p:column width="200"  filterBy="#{partidaseleccionadacopia.nombreProyecto}" filterMatchMode="contains" filterStyle="display:none" >
+                                    <f:facet name="header">
+                                        <h:outputText value="Proyecto"/>
+                                    </f:facet>
+                                    <h:outputText value="#{partidaseleccionadacopia.nombreProyecto}"/>
+                                </p:column>
+                                <p:columnGroup  type="footer">
+                                <p:row>
+                                    <p:column   colspan="5">
+                                       
+                                    </p:column>        
+                                </p:row>
+                                </p:columnGroup>
+                                 <f:facet id="descpartida" name="footer">
+                            <h:outputText value="#{presupuestoBean.selectedPartida.descripcionPartida}" />
+                            </f:facet>
+                            </p:dataTable>
+                            <p:blockUI block="datatablepartidacopia" trigger="datatablepartidacopia">
+                                    CARGANDO..<br />
+                                    <p:graphicImage name="/img/ajax-loading-bar.gif"/>
+                                </p:blockUI>
+                        </h:panelGrid>
+
+                        
+                        
+                        
+                        
+    </body>
+</html>

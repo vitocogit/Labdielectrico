@@ -1,0 +1,233 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">  
+    <h:head>
+        <title>Estados de Epps</title>
+    </h:head>
+
+    <style>
+
+        .stylePerColumn {
+            background-color: #F22626;
+            color: black;
+            border-style: none !important;
+        }
+
+    </style>
+
+    <h:body>
+
+        <ui:composition template="../index.xhtml">
+            <ui:define name="content"> 
+
+         
+                    <h:form id="formPatrones" >
+                        <p:growl id="msg" showDetail="false" life="5000" />  
+
+                        <p:dataTable id="IDpatron" var="p"  value="#{patronBean.listapatrones}"  selectionMode="single"  widgetVar="patronTable" rowKey="#{p.id_patron}" 
+                                     rows="5"
+                                     reflow="true"
+                                     currentPageReportTemplate="Resultados :{totalRecords}"
+                                     
+                                     paginator="true"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"
+                                     rowsPerPageTemplate="5,10,15" >
+
+                            <f:facet name="header">
+                                <p:outputPanel>
+
+                                    <div class="ui-g" style="height:100% " >
+                                        <div class="ui-g-12 ui-g-nopad">
+                                            
+                                            <div class="ui-g-4"> 
+                                                
+                                                <p:inputText id="globalFilter" style="width:150px"   immediate="true"/> 
+                                                
+                                                <p:commandButton icon="ui-icon-search" title="Buscar" onclick="PF('patronTable').filter()" ajax="true" />
+                                                
+                                                <p:commandButton  ajax="true" title="Recargar" icon="ui-icon-refresh" oncomplete="PF('patronTable').clearFilters()" resetValues="true"/>
+                                                 
+                                            </div>
+                                            
+                                            <div class="ui-g-4">
+                                                <h:outputText value="Listado de Patrones" />
+                                            </div>
+                                            
+                                            <div class="ui-g-4">
+                                                <p:commandButton  update=":formAgregar" actionListener="#{patronBean.limpiarformulario()}"
+                                                      value="Agregar Patron" oncomplete="PF('agregar').show()" icon="ui-icon-plus" title="Editar" />
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
+
+                                </p:outputPanel>
+                            </f:facet>
+
+
+                            <p:column headerText="Id Patron"  filterStyle="display:none" filterBy="#{p}" sortBy="#{p.id_patron}"  >
+                                <h:outputText value="#{p.id_patron}" />
+                            </p:column>
+
+                            <p:column headerText="Descripción"  filterStyle="display:none" filterBy="#{p.descripcion}" sortBy="#{p.descripcion}" >
+                                <h:outputText value="#{p.descripcion}" />
+                            </p:column>
+
+                            <p:column headerText="Marca"  filterStyle="display:none" filterBy="#{p.marca}" sortBy="#{p.marca}" >
+                                <h:outputText value="#{p.marca}" />
+                            </p:column>
+                            
+                             <p:column headerText="Modelo"  filterStyle="display:none" filterBy="#{p.modelo}" sortBy="#{p.modelo}" >
+                                <h:outputText value="#{p.modelo}" />
+                            </p:column>
+                            
+                            <p:column headerText="N° Serie"  filterStyle="display:none" filterBy="#{p.num_serie}" sortBy="#{p.num_serie}" >
+                                <h:outputText value="#{p.num_serie}" />
+                            </p:column>
+                            
+                            <p:column headerText="Vigente"  filterStyle="display:none"  sortBy="#{p.calibracion_vigente_hasta}" >
+                                <h:outputText value="#{p.calibracion_vigente_hasta}" />
+                            </p:column>
+
+                            <p:column style="width: 80px" exportable="false" >
+
+                                <p:commandButton  update=":formEditar" oncomplete="PF('editar').show()" icon="ui-icon-pencil" title="Editar">
+                                    <f:setPropertyActionListener value="#{p}" target="#{patronBean.patron}"  />
+                                </p:commandButton>
+
+                                <p:commandButton   update=":formEliminar" oncomplete="PF('eliminar').show()" icon="ui-icon-trash" title="Eliminar">  
+                                    <f:setPropertyActionListener value="#{p}" target="#{patronBean.patron}" />  
+                                </p:commandButton>  
+
+                            </p:column>
+
+
+                            <f:facet name="paginatorTopRight">
+                                
+                            </f:facet>
+
+                            <f:facet name="paginatorBottomRight">
+                                
+                                <h:commandLink>
+                                    <p:graphicImage name="/imagenes/excel.png" width="24"/>
+                                    <p:dataExporter type="xls" target="IDpatron" fileName="EstadosEpps" pageOnly="true" postProcessor="#{patronBean.postProcessXLS}" />
+                                </h:commandLink>
+                                
+                            </f:facet>
+                            
+                        </p:dataTable>
+                        
+                        
+                        <p:blockUI block="IDpatron" trigger="IDpatron">
+                                    <p:graphicImage name="/imagenes/fanreel-loader2.gif"/>
+                            </p:blockUI> 
+                        
+
+                    </h:form>
+
+                             
+                
+
+                <!--formulario de agregar -->
+                <h:form id="formAgregar">  
+                    <p:dialog header="Agregar Nuevo Patron" widgetVar="agregar" resizable="false" showEffect="fade" hideEffect="fade" modal="true">
+
+                        <p:messages id="messages" showDetail="false" autoUpdate="false"  closable="true" />
+
+                        <h:panelGrid columns="2" cellpadding="5" >
+                            
+                            <h:outputLabel value="Calibración Vigente Hasta"/>
+                            <p:calendar id="fc"  locale="es"  pattern="dd/MM/yyyy" value="#{patronBean.patron.calibracion_vigente_hasta}" required="true" size="12"/>
+
+                            <h:outputLabel value="Descripción :" style="font-weight:bold" />
+                            <p:inputText id="input_descripcion" value="#{patronBean.patron.descripcion}" maxlength="45" size="50" required="true" requiredMessage="El campo descripción es obligatorio" />
+
+                            <h:outputLabel value="Marca :" style="font-weight:bold" />
+                            <p:inputText id="input_marca" value="#{patronBean.patron.marca}" maxlength="45" size="50" required="true" requiredMessage="El campo marca es obligatorio" />
+                            
+                            <h:outputLabel value="Modelo :" style="font-weight:bold" />
+                            <p:inputText id="input_modelo" value="#{patronBean.patron.modelo}" maxlength="45" size="50" required="true" requiredMessage="El campo modelo es obligatorio" />
+                            
+                            <h:outputLabel value="N° Serie :" style="font-weight:bold" />
+                            <p:inputText id="input_serie" value="#{patronBean.patron.num_serie}" maxlength="45" size="50" required="true" requiredMessage="El campo n° serie es obligatorio" />
+
+                            <p:commandButton  ajax="true" value="Guardar" icon="ui-icon-disk" update=":formPatrones"  oncomplete="PF('agregar').hide();PF('patronTable').clearFilters()" action="#{patronBean.btnCreate(actionEvent)}" />
+
+                            <p:commandButton id="decline" value="Cancelar" icon="ui-icon-circle-close" oncomplete="PF('agregar').hide()"  />
+
+                        </h:panelGrid>  
+
+                    </p:dialog>
+                </h:form>
+
+
+
+                <!--formulario de actualizar -->
+                <h:form id="formEditar">  
+                    <p:dialog header="Modificar Patron" widgetVar="editar" resizable="false" showEffect="fade" hideEffect="fade" modal="true">
+
+                        <p:messages id="messages" showDetail="false" autoUpdate="false"  closable="true" />
+
+                        <h:inputHidden value="#{patronBean.patron.id_patron}"/>
+
+                        <h:panelGrid columns="2" cellpadding="5" >
+                               
+                            <h:outputLabel value="Calibración Vigente Hasta"/>
+                            <p:calendar id="fc"  locale="es"  pattern="dd/MM/yyyy" value="#{patronBean.patron.calibracion_vigente_hasta}" required="true" size="12"/>
+                            
+                            <h:outputLabel value="Descripción :" style="font-weight:bold" />
+                            <p:inputText id="input_descripcion" value="#{patronBean.patron.descripcion}" maxlength="45" size="50" required="true" requiredMessage="El campo descripción es obligatorio" />
+
+                            <h:outputLabel value="Marca :" style="font-weight:bold" />
+                            <p:inputText id="input_marca" value="#{patronBean.patron.marca}" maxlength="45" size="50" required="true" requiredMessage="El campo marca es obligatorio" />
+                            
+                            <h:outputLabel value="Modelo :" style="font-weight:bold" />
+                            <p:inputText id="input_modelo" value="#{patronBean.patron.modelo}" maxlength="45" size="50" required="true" requiredMessage="El campo modelo es obligatorio" />
+                            
+                            <h:outputLabel value="N° Serie :" style="font-weight:bold" />
+                            <p:inputText id="input_serie" value="#{patronBean.patron.num_serie}" maxlength="45" size="50" required="true" requiredMessage="El campo n° serie es obligatorio" />
+
+                            <p:commandButton  ajax="true" value="Actualizar" icon="ui-icon-disk" update=":formPatrones"  oncomplete="PF('editar').hide();PF('patronTable').clearFilters()" action="#{patronBean.btnUpdate(actionEvent)}" />
+
+                            <p:commandButton id="decline" value="Cancelar" icon="ui-icon-circle-close" oncomplete="PF('editar').hide()"  />
+
+                        </h:panelGrid>  
+
+                    </p:dialog>
+                </h:form>
+
+
+
+                <!--formulario de eliminar -->
+                <h:form id="formEliminar">  
+                    <p:dialog header="Eliminar Patron" widgetVar="eliminar" resizable="false" showEffect="fade" hideEffect="fade" modal="true">
+
+                        <p:messages id="messages" showDetail="false" autoUpdate="false"  closable="true" />
+
+                        <h:inputHidden value="#{patronBean.patron.id_patron}"/>
+
+                        <h:panelGrid columns="2" cellpadding="15" >
+
+                            <h:outputLabel value="Descripción :" style="font-weight:bold" />
+                            <p:outputLabel value="#{patronBean.patron.descripcion}" />
+
+                            <p:commandButton  ajax="true" value="Eliminar" icon="ui-icon-disk" update=":formPatrones"  oncomplete="PF('eliminar').hide();PF('patronTable').clearFilters()" action="#{patronBean.btnDelete(actionEvent)}" />
+
+                            <p:commandButton id="decline" value="Cancelar" icon="ui-icon-circle-close" oncomplete="PF('eliminar').hide()"  />
+
+                        </h:panelGrid>  
+
+                    </p:dialog>
+                </h:form>
+
+                
+            </ui:define>
+        </ui:composition>
+
+
+    </h:body>
+</html>

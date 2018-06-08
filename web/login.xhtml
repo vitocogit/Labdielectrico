@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="id" xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" 
+      xmlns:o="http://omnifaces.org/ui"
+      xmlns:of="http://omnifaces.org/functions"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <!--Estilos css login y bootstrap -->
+        <link href="resources/css/login.css" type="text/css" rel="stylesheet"/>
+        <link rel="stylesheet" href="resources/css/bootstrap.min.css" type="text/css"/>
+
+        <div class="header">  
+            <title>Login</title>
+        </div>
+
+    </h:head> 
+    <h:body id="login-bg">
+
+        <div class="container">
+            <p:growl id="growl" showDetail="false" life="6000" />
+
+
+            <div class="col-lg-12" id="login">
+                <center>
+                    <h:form id="formlogin">
+                    <h2 class="form-signin-heading">Login</h2>
+                    <small>Usuario</small>
+                    <p:inputText styleClass="form-control" value="#{loginBeans.usuario.email}" placeholder="Usuario" required="true"  label="user" />
+                    <small>Clave</small>
+                    <p:password styleClass="form-control" value="#{loginBeans.usuario.clave}" placeholder="Clave" required="true"  label="clave" /><br/>
+                    <h:commandButton action="#{loginBeans.login()}" styleClass="btn btn-lg btn-primary btn-block"  value="Login"/>
+                </h:form>
+                </center>  
+            </div>
+
+
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $(":input:visible:enabled:first").focus();
+                });
+            </script>
+        </div>	
+    </h:body>
+</html>

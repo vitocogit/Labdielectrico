@@ -1,0 +1,105 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+         <!-- Libreria JQUERY PRIMEFACES -->
+        <h:outputScript library="primefaces" name="jquery/jquery.js" target="head" /> 
+        <h:outputScript library="primefaces" name="jquery/jquery-plugins.js" target="head" />
+        <title>Sistema Dielectrico</title>
+    </h:head>
+
+    <h:body>
+
+
+            <h:form>  
+                <p:growl id="messages"/>
+
+                <p:menubar>
+                    
+                    <p:menuitem value="Inicio" url="/faces/index.xhtml" icon="ui-icon-home" />
+                    
+                    <p:submenu label="Actions" icon="ui-icon-gear">
+
+                        <p:menuitem value="Modulo de Epp" url="/faces/epps/epp.xhtml" />
+                        <p:menuitem value="Modulo de Patrones" url="/faces/patron/patron.xhtml" />
+                        <p:menuitem value="Tipo de Ensayos" url="/faces/tipoensayos/tipoensayo.xhtml" />
+                        <p:menuitem value="Motivo de devolucion" url="/faces/motivosdevolucion/motivodev.xhtml" />
+                        <p:menuitem value="Cliente Externo" url="/faces/clientes/cliente.xhtml" />
+                        <p:menuitem value="Estados EPP" url="/faces/estadosEpps/epps.xhtml" />
+                        <p:menuitem value="Tipo de EPP" url="/faces/tiposepp/tipoepp.xhtml" />
+                        <p:menuitem value="Clases Tensión" url="/faces/clasestension/clasetension.xhtml" />
+
+                    </p:submenu>
+                        
+                    <p:submenu label="Modulo Ensayos Dialectricos" icon="ui-icon-calculator" >
+                    <p:menuitem value="Nuevo Ensayo" url="/faces/ensayo/ensayo.xhtml" />
+                     <p:menuitem value="Ver Ensayos" url="/faces/listaensayos/ensayos.xhtml" /> 
+                    </p:submenu>   
+
+                    <p:menuitem value="Recepcion y Despacho Epps" url="/faces/estadosEpps/epps.xhtml" icon="ui-icon-print" />
+
+                    <p:menuitem value="Modulo de Existencias Epps" url="/faces/estadosEpps/epps.xhtml" icon="ui-icon-script" />
+
+                    <f:facet name="options">
+                        <p:commandButton  value="Soporte" icon="ui-icon-document" />
+                        <p:commandButton  value="Cerrar" action="#{loginBeans.logout()}"  ajax="false" icon="ui-icon-extlink" />
+                    </f:facet>
+                </p:menubar>
+            </h:form>
+             
+
+        <h3>Sistema Control Ensayos Dialectricos</h3>
+        
+        <br></br>  <br></br>        
+        
+        <ui:insert name="content" class="central" >
+            <!--  mostrar calendario en español -->
+            <h:outputScript name="js/calendar_es.js"/>
+           
+            <h:form id="formUsuario">
+
+                    <p:panelGrid columns="2">
+                        <f:facet name="header">
+                            <p:graphicImage name="/imagenes/usuario.png" />
+                        </f:facet>
+                        <h:outputText value="Id Persona:" />
+                        <h:outputText value="#{loginBeans.usuario.idPersona}" />
+                        <h:outputText value="Nombre de Usuario:" />
+                        <h:outputText value="#{loginBeans.usuario.nombres} #{loginBeans.usuario.apellidos}" />
+                        <h:outputText value="Sucursal" />
+                        <h:outputText value="#{loginBeans.usuario.idSucursal}" />
+                        <h:outputText value="Perfil:" />
+                        <h:outputText value="#{loginBeans.usuario.rol}" />
+                    </p:panelGrid>
+                </h:form>
+            
+            <h:form>
+                <p:growl id="growl" showDetail="true" />
+
+                <h:panelGrid columns="2" columnClasses="left,right" style="width:60%">
+                    
+                    <p:chart type="pie" model="#{chartView.pieModel1}" style="width:400px;height:300px">
+                        <p:ajax event="itemSelect" listener="#{chartView.itemSelect}" update="growl" />
+                    </p:chart>
+
+                    <p:chart type="bar" model="#{chartView.barModel}" style="width:400px;height:300px">
+                        <p:ajax event="itemSelect" listener="#{chartView.itemSelect}" update="growl" />
+                    </p:chart> 
+                    
+                </h:panelGrid>
+
+            </h:form>
+            
+            
+        </ui:insert>
+            
+
+    </h:body>
+
+</html>

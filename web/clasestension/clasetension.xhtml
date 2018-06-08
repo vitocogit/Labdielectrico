@@ -1,0 +1,208 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">  
+    <h:head>
+        <title>Tipo Ensayos</title>
+    </h:head>
+
+    <style>
+
+        .stylePerColumn {
+            background-color: #F22626;
+            color: black;
+            border-style: none !important;
+        }
+
+    </style>
+
+    <h:body>
+
+        <ui:composition template="../index.xhtml">
+            <ui:define name="content"> 
+
+         
+                    <h:form id="formClaseTension" >
+                        <p:growl id="msg" showDetail="false" life="5000" />  
+
+                        <p:dataTable id="tblclasetension" var="clasetension"  value="#{claseTensionBean.listas}"  selectionMode="single"  widgetVar="clasetensionTable" rowKey="#{clasetension.id_clase_tension}" 
+                                     rows="10"
+                                     reflow="true"
+                                     currentPageReportTemplate="Resultados :{totalRecords}"
+                                     
+                                     paginator="true"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"
+                                     rowsPerPageTemplate="5,10,15" >
+
+                            <f:facet name="header">
+                                <p:outputPanel>
+
+                                    <div class="ui-g" style="height:100% " >
+                                        <div class="ui-g-12 ui-g-nopad">
+                                            
+                                            <div class="ui-g-4"> 
+                                                
+                                                <p:inputText id="globalFilter" style="width:150px"   immediate="true"/> 
+                                                
+                                                <p:commandButton icon="ui-icon-search" title="Buscar" onclick="PF('clasetensionTable').filter()" ajax="true" />
+                                                
+                                                <p:commandButton  ajax="true" title="Recargar" icon="ui-icon-refresh" oncomplete="PF('clasetensionTable').clearFilters()" resetValues="true"/>
+                                                 
+                                            </div>
+                                            
+                                            <div class="ui-g-4">
+                                                <h:outputText value="Listado de Tipos de Ensayos" />
+                                            </div>
+                                            
+                                            <div class="ui-g-4">
+                                                <p:commandButton  update=":formAgregar" actionListener="#{claseTensionBean.limpiarformulario()}"
+                                                      value="Agregar Id Tipo Ensayo" oncomplete="PF('agregar').show()" icon="ui-icon-plus" title="Editar" />
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
+
+                                </p:outputPanel>
+                            </f:facet>
+
+
+                            <p:column headerText="Id Clase Ensayo"  filterStyle="display:none" filterBy="#{clasetension.id_clase_tension}" sortBy="#{clasetension.clases}"  >
+                                <h:outputText value="#{clasetension.id_clase_tension}" />
+                            </p:column>
+
+                            <p:column headerText="Clase"  filterStyle="display:none" filterBy="#{clasetension.clases}" sortBy="#{clasetension.clases}" >
+                                <h:outputText value="#{clasetension.clases}" />
+                            </p:column>
+
+                            <p:column headerText="Tensión Ensayo"  filterStyle="display:none" filterBy="#{clasetension.tension_ensayo}" sortBy="#{clasetension.tension_ensayo}" >
+                                <h:outputText value="#{clasetension.tension_ensayo}" />
+                            </p:column>
+                           
+
+                            <p:column style="width: 80px" exportable="false" >
+
+                                <p:commandButton  update=":formEditar" oncomplete="PF('editar').show()" icon="ui-icon-pencil" title="Editar">
+                                    <f:setPropertyActionListener value="#{clasetension}" target="#{claseTensionBean.clasestension}"  />
+                                </p:commandButton>
+
+                                <p:commandButton   update=":formEliminar" oncomplete="PF('eliminar').show()" icon="ui-icon-trash" title="Eliminar">  
+                                    <f:setPropertyActionListener value="#{clasetension}" target="#{claseTensionBean.clasestension}" />  
+                                </p:commandButton>  
+
+                            </p:column>
+
+
+                            <f:facet name="paginatorTopRight">
+                                
+                            </f:facet>
+
+                            <f:facet name="paginatorBottomRight">
+                                
+                                <h:commandLink>
+                                    <p:graphicImage name="/imagenes/excel.png" width="24"/>
+                                    <p:dataExporter type="xls" target="tblclasetension" fileName="EstadosEpps" postProcessor="#{claseTensionBean.postProcessXLS}" />
+                                </h:commandLink>
+                                
+                            </f:facet>
+                            
+                        </p:dataTable>
+                        
+                        
+                        <p:blockUI block="tblclasetension" trigger="tblclasetension">
+                                    <p:graphicImage name="/imagenes/fanreel-loader2.gif"/>
+                            </p:blockUI> 
+                        
+
+                    </h:form>
+
+                             
+                
+
+                <!--formulario de agregar -->
+                <h:form id="formAgregar">  
+                    <p:dialog header="Agregar Nuevo Clase Tensión" widgetVar="agregar" resizable="false" showEffect="fade" hideEffect="fade" modal="true">
+
+                        <p:messages id="messages" showDetail="false" autoUpdate="false"  closable="true" />
+
+                        <h:panelGrid columns="2" cellpadding="5" >
+                                                   
+                            <h:outputLabel value="Clase :" style="font-weight:bold" />
+                            <p:inputText id="input_clase" value="#{claseTensionBean.clasestension.clases}" maxlength="45" size="50" required="true" requiredMessage="El campo clase es obligatorio" />
+                            
+                            <h:outputLabel value="Tensión Ensayo :" style="font-weight:bold" />
+                            <p:inputText id="input_tension" value="#{claseTensionBean.clasestension.tension_ensayo}" maxlength="45" size="50" required="true" requiredMessage="El campo tipo ensayo es obligatorio" />
+                            
+                            <p:commandButton  ajax="true" value="Guardar" icon="ui-icon-disk" update=":formClaseTension"  oncomplete="PF('agregar').hide();PF('clasetensionTable').clearFilters()" action="#{claseTensionBean.btnCreate(actionEvent)}" />
+
+                            <p:commandButton id="decline" value="Cancelar" icon="ui-icon-circle-close" oncomplete="PF('agregar').hide()"  />
+
+                        </h:panelGrid>  
+
+                    </p:dialog>
+                </h:form>
+
+
+
+                <!--formulario de actualizar -->
+                <h:form id="formEditar">  
+                    <p:dialog header="Modificar Tipo Ensayo" widgetVar="editar" resizable="false" showEffect="fade" hideEffect="fade" modal="true">
+
+                        <p:messages id="messages" showDetail="false" autoUpdate="false"  closable="true" />
+
+                        <h:inputHidden value="#{claseTensionBean.clasestension.id_clase_tension}"/>
+
+                        <h:panelGrid columns="2" cellpadding="5" >
+                               
+                              <h:outputLabel value="Clase :" style="font-weight:bold" />
+                            <p:inputText id="input_clase" value="#{claseTensionBean.clasestension.clases}" maxlength="45" size="50" required="true" requiredMessage="El campo clase es obligatorio" />
+                            
+                            <h:outputLabel value="Tensión Ensayo :" style="font-weight:bold" />
+                            <p:inputText id="input_tension" value="#{claseTensionBean.clasestension.tension_ensayo}" maxlength="45" size="50" required="true" requiredMessage="El campo tipo ensayo es obligatorio" />
+                            
+
+                            <p:commandButton  ajax="true" value="Actualizar" icon="ui-icon-disk" update=":formClaseTension"  oncomplete="PF('editar').hide();PF('clasetensionTable').clearFilters()" action="#{claseTensionBean.btnUpdate(actionEvent)}" />
+
+                            <p:commandButton id="decline" value="Cancelar" icon="ui-icon-circle-close" oncomplete="PF('editar').hide()"  />
+
+                        </h:panelGrid>  
+
+                    </p:dialog>
+                </h:form>
+
+
+
+                <!--formulario de eliminar -->
+                <h:form id="formEliminar">  
+                    <p:dialog header="Eliminar Clase Tensión" widgetVar="eliminar" resizable="false" showEffect="fade" hideEffect="fade" modal="true">
+
+                        <p:messages id="messages" showDetail="false" autoUpdate="false"  closable="true" />
+
+                        <h:inputHidden value="#{claseTensionBean.clasestension.id_clase_tension}"/>
+
+                        <h:panelGrid columns="2" cellpadding="15" >
+
+                             <h:outputLabel value="Clase :" style="font-weight:bold" />
+                             <p:outputLabel  value="#{claseTensionBean.clasestension.clases}" />
+                            
+                            <h:outputLabel value="Tensión Ensayo :" style="font-weight:bold" />
+                            <p:outputLabel  value="#{claseTensionBean.clasestension.tension_ensayo}" />
+                            
+                            <p:commandButton  ajax="true" value="Eliminar" icon="ui-icon-disk" update=":formClaseTension"  oncomplete="PF('eliminar').hide();PF('clasetensionTable').clearFilters()" action="#{claseTensionBean.btnDelete(actionEvent)}" />
+
+                            <p:commandButton id="decline" value="Cancelar" icon="ui-icon-circle-close" oncomplete="PF('eliminar').hide()"  />
+
+                        </h:panelGrid>  
+
+                    </p:dialog>
+                </h:form>
+
+                
+            </ui:define>
+        </ui:composition>
+
+
+    </h:body>
+</html>

@@ -1,0 +1,262 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">  
+    <h:head>
+        <title>Tipo Ensayos</title>
+    </h:head>
+
+    <style>
+
+        .stylePerColumn {
+            background-color: #F22626;
+            color: black;
+            border-style: none !important;
+        }
+
+    </style>
+
+    <h:body>
+
+        <ui:composition template="../index.xhtml">
+            <ui:define name="content"> 
+
+         
+                    <h:form id="formTipoEnsayos" >
+                        <p:growl id="msg" showDetail="false" life="5000" />  
+
+                        <p:dataTable id="tbltipoensayo" var="tipoensayos"  value="#{tipoEnsayoBean.listas}"  selectionMode="single"  widgetVar="tipoensayosTable" rowKey="#{tipoensayos.d_tipo_ensayo}" 
+                                     rows="10"
+                                     reflow="true"
+                                     currentPageReportTemplate="Resultados :{totalRecords}"
+                                     
+                                     paginator="true"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"
+                                     rowsPerPageTemplate="5,10,15" >
+
+                            <f:facet name="header">
+                                <p:outputPanel>
+
+                                    <div class="ui-g" style="height:100% " >
+                                        <div class="ui-g-12 ui-g-nopad">
+                                            
+                                            <div class="ui-g-4"> 
+                                                
+                                                <p:inputText id="globalFilter" style="width:150px"   immediate="true"/> 
+                                                
+                                                <p:commandButton icon="ui-icon-search" title="Buscar" onclick="PF('tipoensayosTable').filter()" ajax="true" />
+                                                
+                                                <p:commandButton  ajax="true" title="Recargar" icon="ui-icon-refresh" oncomplete="PF('tipoensayosTable').clearFilters()" resetValues="true"/>
+                                                 
+                                            </div>
+                                            
+                                            <div class="ui-g-4">
+                                                <h:outputText value="Listado de Tipos de Ensayos" />
+                                            </div>
+                                            
+                                            <div class="ui-g-4">
+                                                <p:commandButton  update=":formAgregar" actionListener="#{tipoEnsayoBean.limpiarformulario()}"
+                                                      value="Agregar Id Tipo Ensayo" oncomplete="PF('agregar').show()" icon="ui-icon-plus" title="Editar" />
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
+
+                                </p:outputPanel>
+                            </f:facet>
+
+
+                            <p:column headerText="Id Id Tipo Ensayo"  filterStyle="display:none" filterBy="#{tipoensayos}" sortBy="#{tipoensayos.d_tipo_ensayo}"  >
+                                <h:outputText value="#{tipoensayos.d_tipo_ensayo}" />
+                            </p:column>
+
+                            <p:column headerText="Descripción"  filterStyle="display:none" filterBy="#{tipoensayos.descripcion}" sortBy="#{tipoensayos.descripcion}" >
+                                <h:outputText value="#{tipoensayos.descripcion}" />
+                            </p:column>
+
+                            <p:column headerText="Fecha Creación"  filterStyle="display:none" filterBy="#{tipoensayos.fecha_creacion}" sortBy="#{tipoensayos.fecha_creacion}" >
+                                <h:outputText value="#{tipoensayos.fecha_creacion}" />
+                            </p:column>
+                            
+                            <p:column headerText="Nombre Corto"  filterStyle="display:none" filterBy="#{tipoensayos.nombre_corto}" sortBy="#{tipoensayos.nombre_corto}" >
+                                <h:outputText value="#{tipoensayos.nombre_corto}" />
+                            </p:column>
+                            
+                            <p:column headerText="Parametro 1"  filterStyle="display:none" filterBy="#{tipoensayos.parametro1}" sortBy="#{tipoensayos.parametro1}" >
+                                <h:outputText value="#{tipoensayos.parametro1}" />
+                            </p:column>
+                            
+                            <p:column headerText="Parametro 2"  filterStyle="display:none" filterBy="#{tipoensayos.parametro2}" sortBy="#{tipoensayos.parametro2}" >
+                                <h:outputText value="#{tipoensayos.parametro2}" />
+                            </p:column>
+                            
+                            <p:column headerText="Parametro 3"  filterStyle="display:none" filterBy="#{tipoensayos.parametro3}" sortBy="#{tipoensayos.parametro3}" >
+                                <h:outputText value="#{tipoensayos.parametro3}" />
+                            </p:column>
+                           
+
+                            <p:column style="width: 80px" exportable="false" >
+
+                                <p:commandButton  update=":formEditar" oncomplete="PF('editar').show()" icon="ui-icon-pencil" title="Editar">
+                                    <f:setPropertyActionListener value="#{tipoensayos}" target="#{tipoEnsayoBean.tipoensayo}"  />
+                                </p:commandButton>
+
+                                <p:commandButton   update=":formEliminar" oncomplete="PF('eliminar').show()" icon="ui-icon-trash" title="Eliminar">  
+                                    <f:setPropertyActionListener value="#{tipoensayos}" target="#{tipoEnsayoBean.tipoensayo}" />  
+                                </p:commandButton>  
+
+                            </p:column>
+
+
+                            <f:facet name="paginatorTopRight">
+                                
+                            </f:facet>
+
+                            <f:facet name="paginatorBottomRight">
+                                
+                                <h:commandLink>
+                                    <p:graphicImage name="/imagenes/excel.png" width="24"/>
+                                    <p:dataExporter type="xls" target="tbltipoensayo" fileName="EstadosEpps" postProcessor="#{tipoEnsayoBean.postProcessXLS}" />
+                                </h:commandLink>
+                                
+                            </f:facet>
+                            
+                        </p:dataTable>
+                        
+                        
+                        <p:blockUI block="tbltipoensayo" trigger="tbltipoensayo">
+                                    <p:graphicImage name="/imagenes/fanreel-loader2.gif"/>
+                            </p:blockUI> 
+                        
+
+                    </h:form>
+
+                             
+                
+
+                <!--formulario de agregar -->
+                <h:form id="formAgregar">  
+                    <p:dialog header="Agregar Nuevo Tipo Ensayo" widgetVar="agregar" resizable="false" showEffect="fade" hideEffect="fade" modal="true">
+
+                        <p:messages id="messages" showDetail="false" autoUpdate="false"  closable="true" />
+
+                        <h:panelGrid columns="2" cellpadding="5" >
+                                                   
+                            <h:outputLabel value="Descripción :" style="font-weight:bold" />
+                            <p:inputText id="input_descripcion" value="#{tipoEnsayoBean.tipoensayo.descripcion}" maxlength="45" size="50" required="true" requiredMessage="El campo negocio es obligatorio" />
+                            
+                            <h:outputLabel value="Fecha Creación"/>
+                            <p:calendar id="fc"  locale="es"  pattern="dd/MM/yyyy" value="#{tipoEnsayoBean.tipoensayo.fecha_creacion}" required="true" size="12"/>
+                            
+                            <h:outputLabel value="Nombre Corto :" style="font-weight:bold" />
+                            <p:inputText id="input_nombre" value="#{tipoEnsayoBean.tipoensayo.nombre_corto}" maxlength="45" size="50" required="true" requiredMessage="El campo negocio es obligatorio" />
+                            
+                             <h:outputLabel value="Parametro 1 :" style="font-weight:bold" />
+                             <p:inputText id="input_p1" value="#{tipoEnsayoBean.tipoensayo.parametro1}" maxlength="45" size="50" required="true" requiredMessage="El campo parametro 1 es obligatorio" />
+                            
+                             <h:outputLabel value="Parametro 2 :" style="font-weight:bold" />
+                             <p:inputText id="input_p2" value="#{tipoEnsayoBean.tipoensayo.parametro2}" maxlength="45" size="50" required="true" requiredMessage="El campo parametro 2 es obligatorio" />
+                            
+                            <h:outputLabel value="Parametro 3 :" style="font-weight:bold" />
+                             <p:inputText id="input_p3" value="#{tipoEnsayoBean.tipoensayo.parametro3}" maxlength="45" size="50" required="true" requiredMessage="El campo parametro 3 es obligatorio" />
+                            
+                             
+                            <p:commandButton  ajax="true" value="Guardar" icon="ui-icon-disk" update=":formTipoEnsayos"  oncomplete="PF('agregar').hide();PF('tipoensayosTable').clearFilters()" action="#{tipoEnsayoBean.btnCreate(actionEvent)}" />
+
+                            <p:commandButton id="decline" value="Cancelar" icon="ui-icon-circle-close" oncomplete="PF('agregar').hide()"  />
+
+                        </h:panelGrid>  
+
+                    </p:dialog>
+                </h:form>
+
+
+
+                <!--formulario de actualizar -->
+                <h:form id="formEditar">  
+                    <p:dialog header="Modificar Tipo Ensayo" widgetVar="editar" resizable="false" showEffect="fade" hideEffect="fade" modal="true">
+
+                        <p:messages id="messages" showDetail="false" autoUpdate="false"  closable="true" />
+
+                        <h:inputHidden value="#{tipoEnsayoBean.tipoensayo.d_tipo_ensayo}"/>
+
+                        <h:panelGrid columns="2" cellpadding="5" >
+                               
+                              <h:outputLabel value="Descripción :" style="font-weight:bold" />
+                            <p:inputText id="input_descripcion" value="#{tipoEnsayoBean.tipoensayo.descripcion}" maxlength="45" size="50" required="true" requiredMessage="El campo negocio es obligatorio" />
+                            
+                            <h:outputLabel value="Fecha Creación"/>
+                            <p:calendar id="fc"  locale="es"  pattern="dd/MM/yyyy" value="#{tipoEnsayoBean.tipoensayo.fecha_creacion}" required="true" size="12"/>
+                            
+                            <h:outputLabel value="Nombre Corto :" style="font-weight:bold" />
+                            <p:inputText id="input_nombre" value="#{tipoEnsayoBean.tipoensayo.nombre_corto}" maxlength="45" size="50" required="true" requiredMessage="El campo negocio es obligatorio" />
+                            
+                             <h:outputLabel value="Parametro 1 :" style="font-weight:bold" />
+                             <p:inputText id="input_p1" value="#{tipoEnsayoBean.tipoensayo.parametro1}" maxlength="45" size="50" required="true" requiredMessage="El campo parametro 1 es obligatorio" />
+                            
+                             <h:outputLabel value="Parametro 2 :" style="font-weight:bold" />
+                             <p:inputText id="input_p2" value="#{tipoEnsayoBean.tipoensayo.parametro2}" maxlength="45" size="50" required="true" requiredMessage="El campo parametro 2 es obligatorio" />
+                            
+                            <h:outputLabel value="Parametro 3 :" style="font-weight:bold" />
+                             <p:inputText id="input_p3" value="#{tipoEnsayoBean.tipoensayo.parametro3}" maxlength="45" size="50" required="true" requiredMessage="El campo parametro 3 es obligatorio" />
+                            
+
+                            <p:commandButton  ajax="true" value="Actualizar" icon="ui-icon-disk" update=":formTipoEnsayos"  oncomplete="PF('editar').hide();PF('tipoensayosTable').clearFilters()" action="#{tipoEnsayoBean.btnUpdate(actionEvent)}" />
+
+                            <p:commandButton id="decline" value="Cancelar" icon="ui-icon-circle-close" oncomplete="PF('editar').hide()"  />
+
+                        </h:panelGrid>  
+
+                    </p:dialog>
+                </h:form>
+
+
+
+                <!--formulario de eliminar -->
+                <h:form id="formEliminar">  
+                    <p:dialog header="Eliminar Id Tipo Ensayo" widgetVar="eliminar" resizable="false" showEffect="fade" hideEffect="fade" modal="true">
+
+                        <p:messages id="messages" showDetail="false" autoUpdate="false"  closable="true" />
+
+                        <h:inputHidden value="#{tipoEnsayoBean.tipoensayo.d_tipo_ensayo}"/>
+
+                        <h:panelGrid columns="2" cellpadding="15" >
+
+                              <h:outputLabel value="Descripción :" style="font-weight:bold" />
+                              <p:outputLabel  value="#{tipoEnsayoBean.tipoensayo.descripcion}"  />
+                            
+                            <h:outputLabel value="Fecha Creación"/>
+                            <p:outputLabel value="#{tipoEnsayoBean.tipoensayo.fecha_creacion}"/>
+                            
+                            <h:outputLabel value="Nombre Corto :" style="font-weight:bold" />
+                            <p:outputLabel value="#{tipoEnsayoBean.tipoensayo.nombre_corto}"  />
+                            
+                             <h:outputLabel value="Parametro 1 :" style="font-weight:bold" />
+                             <p:outputLabel value="#{tipoEnsayoBean.tipoensayo.parametro1}"  />
+                            
+                             <h:outputLabel value="Parametro 2 :" style="font-weight:bold" />
+                             <p:outputLabel  value="#{tipoEnsayoBean.tipoensayo.parametro2}"  />
+                            
+                            <h:outputLabel value="Parametro 3 :" style="font-weight:bold" />
+                            <p:outputLabel  value="#{tipoEnsayoBean.tipoensayo.parametro3}"  />
+                            
+
+                            <p:commandButton  ajax="true" value="Eliminar" icon="ui-icon-disk" update=":formTipoEnsayos"  oncomplete="PF('eliminar').hide();PF('tipoensayosTable').clearFilters()" action="#{tipoEnsayoBean.btnDelete(actionEvent)}" />
+
+                            <p:commandButton id="decline" value="Cancelar" icon="ui-icon-circle-close" oncomplete="PF('eliminar').hide()"  />
+
+                        </h:panelGrid>  
+
+                    </p:dialog>
+                </h:form>
+
+                
+            </ui:define>
+        </ui:composition>
+
+
+    </h:body>
+</html>

@@ -1,0 +1,234 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">  
+    <h:head>
+        <title>Estados de Epps</title>
+    </h:head>
+
+    <style>
+
+        .stylePerColumn {
+            background-color: #F22626;
+            color: black;
+            border-style: none !important;
+        }
+
+    </style>
+
+    <h:body>
+
+        <ui:composition template="../index.xhtml">
+            <ui:define name="content"> 
+
+         
+                    <h:form id="formClientes" >
+                        <p:growl id="msg" showDetail="false" life="5000" />  
+
+                        <p:dataTable id="tblcliente" var="cliente"  value="#{clienteExternoBean.listas}"  selectionMode="single"  widgetVar="clienteTable" rowKey="#{cliente.id_cliente_externo}" 
+                                     rows="5"
+                                     reflow="true"
+                                     currentPageReportTemplate="Resultados :{totalRecords}"
+                                     
+                                     paginator="true"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"
+                                     rowsPerPageTemplate="5,10,15" >
+
+                            <f:facet name="header">
+                                <p:outputPanel>
+
+                                    <div class="ui-g" style="height:100% " >
+                                        <div class="ui-g-12 ui-g-nopad">
+                                            
+                                            <div class="ui-g-4"> 
+                                                
+                                                <p:inputText id="globalFilter" style="width:150px"   immediate="true"/> 
+                                                
+                                                <p:commandButton icon="ui-icon-search" title="Buscar" onclick="PF('clienteTable').filter()" ajax="true" />
+                                                
+                                                <p:commandButton  ajax="true" title="Recargar" icon="ui-icon-refresh" oncomplete="PF('clienteTable').clearFilters()" resetValues="true"/>
+                                                 
+                                            </div>
+                                            
+                                            <div class="ui-g-4">
+                                                <h:outputText value="Listado de clientees" />
+                                            </div>
+                                            
+                                            <div class="ui-g-4">
+                                                <p:commandButton  update=":formAgregar" actionListener="#{clienteExternoBean.limpiarformulario()}"
+                                                      value="Agregar Cliente" oncomplete="PF('agregar').show()" icon="ui-icon-plus" title="Editar" />
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
+
+                                </p:outputPanel>
+                            </f:facet>
+
+
+                            <p:column headerText="Id Cliente"  filterStyle="display:none" filterBy="#{cliente}" sortBy="#{cliente.id_cliente_externo}"  >
+                                <h:outputText value="#{cliente.id_cliente_externo}" />
+                            </p:column>
+
+                            <p:column headerText="Cliente"  filterStyle="display:none" filterBy="#{cliente.cliente}" sortBy="#{cliente.cliente}" >
+                                <h:outputText value="#{cliente.cliente}" />
+                            </p:column>
+
+                            <p:column headerText="Negocio"  filterStyle="display:none" filterBy="#{cliente.negocio}" sortBy="#{cliente.negocio}" >
+                                <h:outputText value="#{cliente.negocio}" />
+                            </p:column>
+                            
+                            <p:column headerText="Dirección"  filterStyle="display:none" filterBy="#{cliente.direccion}" sortBy="#{cliente.direccion}" >
+                                <h:outputText value="#{cliente.direccion}" />
+                            </p:column>
+                            
+                            <p:column headerText="Ciudad"  filterStyle="display:none" filterBy="#{cliente.ciudad}" sortBy="#{cliente.ciudad}" >
+                                <h:outputText value="#{cliente.ciudad}" />
+                            </p:column>
+                            
+                           
+
+                            <p:column style="width: 80px" exportable="false" >
+
+                                <p:commandButton  update=":formEditar" oncomplete="PF('editar').show()" icon="ui-icon-pencil" title="Editar">
+                                    <f:setPropertyActionListener value="#{cliente}" target="#{clienteExternoBean.cliente}"  />
+                                </p:commandButton>
+
+                                <p:commandButton   update=":formEliminar" oncomplete="PF('eliminar').show()" icon="ui-icon-trash" title="Eliminar">  
+                                    <f:setPropertyActionListener value="#{cliente}" target="#{clienteExternoBean.cliente}" />  
+                                </p:commandButton>  
+
+                            </p:column>
+
+
+                            <f:facet name="paginatorTopRight">
+                                
+                            </f:facet>
+
+                            <f:facet name="paginatorBottomRight">
+                                
+                                <h:commandLink>
+                                    <p:graphicImage name="/imagenes/excel.png" width="24"/>
+                                    <p:dataExporter type="xls" target="tblcliente" fileName="EstadosEpps" postProcessor="#{clienteExternoBean.postProcessXLS}" />
+                                </h:commandLink>
+                                
+                            </f:facet>
+                            
+                        </p:dataTable>
+                        
+                        
+                        <p:blockUI block="tblcliente" trigger="tblcliente">
+                                    <p:graphicImage name="/imagenes/fanreel-loader2.gif"/>
+                            </p:blockUI> 
+                        
+
+                    </h:form>
+
+                             
+                
+
+                <!--formulario de agregar -->
+                <h:form id="formAgregar">  
+                    <p:dialog header="Agregar Nuevo Cliente" widgetVar="agregar" resizable="false" showEffect="fade" hideEffect="fade" modal="true">
+
+                        <p:messages id="messages" showDetail="false" autoUpdate="false"  closable="true" />
+
+                        <h:panelGrid columns="2" cellpadding="5" >
+                                                    
+                            <h:outputLabel value="Cliente :" style="font-weight:bold" />
+                            <p:inputText id="input_cliente" value="#{clienteExternoBean.cliente.cliente}" maxlength="45" size="50" required="true" requiredMessage="El campo cliente es obligatorio" />
+
+                            <h:outputLabel value="Negocio :" style="font-weight:bold" />
+                            <p:inputText id="input_negocio" value="#{clienteExternoBean.cliente.negocio}" maxlength="45" size="50" required="true" requiredMessage="El campo negocio es obligatorio" />
+                            
+                            <h:outputLabel value="Dirección :" style="font-weight:bold" />
+                            <p:inputText id="input_direccion" value="#{clienteExternoBean.cliente.direccion}" maxlength="45" size="50" required="true" requiredMessage="El campo dirección es obligatorio" />
+                            
+                            <h:outputLabel value="Ciudad :" style="font-weight:bold" />
+                            <p:inputText id="input_ciudad" value="#{clienteExternoBean.cliente.ciudad}" maxlength="45" size="50" required="true" requiredMessage="El campo ciudad es obligatorio" />
+
+                            <p:commandButton  ajax="true" value="Guardar" icon="ui-icon-disk" update=":formClientes"  oncomplete="PF('agregar').hide();PF('clienteTable').clearFilters()" action="#{clienteExternoBean.btnCreate(actionEvent)}" />
+
+                            <p:commandButton id="decline" value="Cancelar" icon="ui-icon-circle-close" oncomplete="PF('agregar').hide()"  />
+
+                        </h:panelGrid>  
+
+                    </p:dialog>
+                </h:form>
+
+
+
+                <!--formulario de actualizar -->
+                <h:form id="formEditar">  
+                    <p:dialog header="Modificar Cliente" widgetVar="editar" resizable="false" showEffect="fade" hideEffect="fade" modal="true">
+
+                        <p:messages id="messages" showDetail="false" autoUpdate="false"  closable="true" />
+
+                        <h:inputHidden value="#{clienteExternoBean.cliente.id_cliente_externo}"/>
+
+                        <h:panelGrid columns="2" cellpadding="5" >
+                               
+                           <h:outputLabel value="Cliente :" style="font-weight:bold" />
+                            <p:inputText id="input_cliente" value="#{clienteExternoBean.cliente.cliente}" maxlength="45" size="50" required="true" requiredMessage="El campo cliente es obligatorio" />
+
+                            <h:outputLabel value="Negocio :" style="font-weight:bold" />
+                            <p:inputText id="input_negocio" value="#{clienteExternoBean.cliente.negocio}" maxlength="45" size="50" required="true" requiredMessage="El campo negocio es obligatorio" />
+                            
+                            <h:outputLabel value="Dirección :" style="font-weight:bold" />
+                            <p:inputText id="input_direccion" value="#{clienteExternoBean.cliente.direccion}" maxlength="45" size="50" required="true" requiredMessage="El campo dirección es obligatorio" />
+                            
+                            <h:outputLabel value="Ciudad :" style="font-weight:bold" />
+                            <p:inputText id="input_ciudad" value="#{clienteExternoBean.cliente.ciudad}" maxlength="45" size="50" required="true" requiredMessage="El campo ciudad es obligatorio" />  
+
+                            <p:commandButton  ajax="true" value="Actualizar" icon="ui-icon-disk" update=":formClientes"  oncomplete="PF('editar').hide();PF('clienteTable').clearFilters()" action="#{clienteExternoBean.btnUpdate(actionEvent)}" />
+
+                            <p:commandButton id="decline" value="Cancelar" icon="ui-icon-circle-close" oncomplete="PF('editar').hide()"  />
+
+                        </h:panelGrid>  
+
+                    </p:dialog>
+                </h:form>
+
+
+
+                <!--formulario de eliminar -->
+                <h:form id="formEliminar">  
+                    <p:dialog header="Eliminar Cliente" widgetVar="eliminar" resizable="false" showEffect="fade" hideEffect="fade" modal="true">
+
+                        <p:messages id="messages" showDetail="false" autoUpdate="false"  closable="true" />
+
+                        <h:inputHidden value="#{clienteExternoBean.cliente.id_cliente_externo}"/>
+
+                        <h:panelGrid columns="2" cellpadding="15" >
+
+                            <h:outputLabel value="Cliente :" style="font-weight:bold" />
+                            <p:outputLabel  value="#{clienteExternoBean.cliente.cliente}" />
+
+                            <h:outputLabel value="Negocio :" style="font-weight:bold" />
+                           <p:outputLabel  value="#{clienteExternoBean.cliente.negocio}"  />
+                            
+                            <h:outputLabel value="Dirección :" style="font-weight:bold" />
+                            <p:outputLabel  value="#{clienteExternoBean.cliente.direccion}" />
+                            
+                            <h:outputLabel value="Ciudad :" style="font-weight:bold" />
+                            <p:outputLabel value="#{clienteExternoBean.cliente.ciudad}" /> 
+
+                            <p:commandButton  ajax="true" value="Eliminar" icon="ui-icon-disk" update=":formClientes"  oncomplete="PF('eliminar').hide();PF('clienteTable').clearFilters()" action="#{clienteExternoBean.btnDelete(actionEvent)}" />
+
+                            <p:commandButton id="decline" value="Cancelar" icon="ui-icon-circle-close" oncomplete="PF('eliminar').hide()"  />
+
+                        </h:panelGrid>  
+
+                    </p:dialog>
+                </h:form>
+
+                
+            </ui:define>
+        </ui:composition>
+
+
+    </h:body>
+</html>
